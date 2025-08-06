@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 Realtime Chat Client - Step 2: Network Client
@@ -26,7 +27,12 @@ def main():
     client_socket.send(message.encode('utf-8'))
     print(f"Sent: {user_input}")
     
-    # TODO: Receive and display response (next chunk)
+    # Receive and display server response
+    response = client_socket.recv(1024).decode('utf-8')
+    if response:
+        print(f"Server echoed: {response.strip()}")
+    else:
+        print("Server disconnected")
     
     # Close connection
     client_socket.close()

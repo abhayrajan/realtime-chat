@@ -27,7 +27,24 @@ def main():
     client_socket, client_address = server_socket.accept()
     print(f"Connection established with {client_address}")
     
-    # TODO: Handle client messages (next chunk)
+    # Handle client messages - echo loop
+    try:
+        while True:
+            # Receive message from client
+            message = client_socket.recv(1024).decode('utf-8')
+            
+            # Check if client disconnected
+            if not message:
+                print("Client disconnected")
+                break
+                
+            print(f"Received: {message.strip()}")
+            
+            # Echo message back to client
+            client_socket.send(message.encode('utf-8'))
+            
+    except ConnectionResetError:
+        print("Client connection reset")
     
     # Close connections
     client_socket.close()

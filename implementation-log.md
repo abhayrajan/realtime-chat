@@ -92,15 +92,24 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
 
 **Goal**: Enhance client to support usernames and concurrent message handling
 
-### Chunk 1: Username Prompt and Registration (NEXT)
+### Chunk 1: Username Prompt ✅
+- **File**: `client.py`
+- **Lines**: 3 lines added
 - **Implementation**:
   - Prompt user for username on connection
-  - Send username to server for registration
-  - Handle username confirmation from server
-  - Store username for message prefixing
+  - Store username locally for message prefixing
+  - Welcome message confirmation
+
+### Chunk 2: Message Prefixing with Username ✅
+- **File**: `client.py`
+- **Lines**: 4 lines modified/added
+- **Implementation**:
+  - Prefix sent messages with username format "username: message"
+  - Add local client echo (displays message immediately)
+  - Clean server response display (no "Server echoed:" prefix)
+  - Simple input prompt with no instructions
 
 ### Planned Chunks:
-2. Message prefixing with username
 3. Concurrent I/O handling with threading or select
 4. Display incoming messages while typing
 

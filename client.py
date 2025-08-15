@@ -19,12 +19,11 @@ def main():
     client_socket.connect((host, port))
     print("Connected to server!")
     
-    # Prompt user for username
-    username = input("Enter your username: ")
-    print(f"Welcome, {username}!")
-    
-    # Main chat loop
+    # Main chat loop with username prompt
     try:
+        # Prompt user for username
+        username = input("Enter your username: ")
+        print(f"Welcome, {username}!")
         while True:
             # Get user input
             user_input = input()

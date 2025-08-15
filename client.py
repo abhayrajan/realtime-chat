@@ -19,20 +19,33 @@ def main():
     client_socket.connect((host, port))
     print("Connected to server!")
     
-    # Get user input and send message
-    user_input = input("Enter a message: ")
-    
-    # Send message to server
-    message = user_input + '\n'  # Add newline for proper formatting
-    client_socket.send(message.encode('utf-8'))
-    print(f"Sent: {user_input}")
-    
-    # Receive and display server response
-    response = client_socket.recv(1024).decode('utf-8')
-    if response:
-        print(f"Server echoed: {response.strip()}")
-    else:
-        print("Server disconnected")
+    # Main chat loop
+    try:
+        while True:
+            # Get user input
+            user_input = input("Enter a message (or 'quit'/'exit' to disconnect): ")
+            
+            # Check for quit/exit commands
+            if user_input.lower() in ['quit', 'exit']:
+                print("Disconnecting...")
+                break
+            
+            # Send message to server
+            message = user_input + '\n'
+            client_socket.send(message.encode('utf-8'))
+            
+            # Receive and display server response
+            response = client_socket.recv(1024).decode('utf-8')
+            if response:
+                print(f"Server echoed: {response.strip()}")
+            else:
+                print("Server disconnected")
+                break
+                
+    except KeyboardInterrupt:
+        print("\nInterrupted by user")
+    except Exception as e:
+        print(f"Error: {e}")
     
     # Close connection
     client_socket.close()

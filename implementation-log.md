@@ -74,21 +74,32 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
 
 **Testing**: Client connects, sends message, receives echo, disconnects cleanly
 
-### Chunk 4: Main Loop with Quit/Exit (PLANNED)
+### Chunk 4: Main Loop with Quit/Exit ✅
+- **File**: `client.py`
+- **Lines**: 15 lines added
 - **Implementation**:
-  - Input/send/receive loop
-  - Check for "quit" and "exit" commands
-  - Clean disconnection handling
-  - Error handling
+  - Main chat loop with `while True` for multiple messages
+  - Quit/exit commands (case insensitive)
+  - Continuous messaging without reconnecting
+  - Error handling for KeyboardInterrupt and general exceptions
+  - Clean disconnection on server disconnect or user quit
+
+**Testing**: Client connects, sends multiple messages, handles quit/exit/Ctrl+C, disconnects cleanly
 
 ---
 
-## Step 3: Chat Client with Username (PLANNED)
+## Step 3: Chat Client with Username (IN PROGRESS)
 
 **Goal**: Enhance client to support usernames and concurrent message handling
 
+### Chunk 1: Username Prompt and Registration (NEXT)
+- **Implementation**:
+  - Prompt user for username on connection
+  - Send username to server for registration
+  - Handle username confirmation from server
+  - Store username for message prefixing
+
 ### Planned Chunks:
-1. Username prompt and registration
 2. Message prefixing with username
 3. Concurrent I/O handling with threading or select
 4. Display incoming messages while typing

@@ -128,15 +128,26 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
 
 **Goal**: Transform echo server into multi-user chat with message broadcasting
 
-### Chunk 1: Threading Setup for Multiple Connections (IN PROGRESS)
+### Chunk 1: Threading Setup for Multiple Connections ✅
 - **File**: `server.py`
 - **Lines**: 1 line added (import threading)
 - **Implementation**:
   - Added threading module import
-  - Ready to implement client handling functions
+
+### Chunk 2: Client Handling Function and Connection Loop ✅
+- **File**: `server.py`
+- **Lines**: 30 lines added/modified
+- **Implementation**:
+  - Add `handle_client()` function for individual client threads
+  - Replace single-client logic with multi-client connection loop
+  - Create separate thread for each connected client
+  - Change server message from "Echo server" to "Multi-user server"
+  - Increase listen backlog from 1 to 5 (then user changed to 1)
+  - Add KeyboardInterrupt handling for clean shutdown
+
+**Testing**: Server now accepts multiple concurrent clients, each in separate threads
 
 ### Planned Chunks:
-2. Client handling function and connection loop
 3. Client list management
 4. Message broadcasting logic
 5. Connection/disconnection handling

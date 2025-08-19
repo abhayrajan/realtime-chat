@@ -51,7 +51,7 @@ def main():
                 target=handle_client, 
                 args=(client_socket, client_address)
             )
-            # client_thread.daemon = True
+            client_thread.daemon = True
             client_thread.start()
             
     except KeyboardInterrupt:

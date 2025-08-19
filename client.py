@@ -6,6 +6,20 @@ Basic TCP client that connects to the chat server
 """
 
 import socket
+import threading
+
+def receive_messages(client_socket):
+    """Handle incoming messages from server in background thread"""
+    while True:
+        try:
+            response = client_socket.recv(1024).decode('utf-8')
+            if response:
+                print(f"\r{response.strip()}\n> ", end="", flush=True)
+            else:
+                print("\rServer disconnected")
+                break
+        except:
+            break
 
 def main():
     # Create TCP socket
@@ -24,9 +38,15 @@ def main():
         # Prompt user for username
         username = input("Enter your username: ")
         print(f"Welcome, {username}!")
+        
+        # Start background thread for receiving messages
+        receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
+        receive_thread.daemon = True
+        receive_thread.start()
+        
         while True:
-            # Get user input
-            user_input = input()
+            # Get user input with prompt
+            user_input = input("> ")
             
             # Check for quit/exit commands
             if user_input.lower() in ['quit', 'exit']:
@@ -36,17 +56,6 @@ def main():
             # Send message to server with username prefix
             message = f"{username}: {user_input}\n"
             client_socket.send(message.encode('utf-8'))
-            
-            # Echo locally (client-side display)
-            print(f"{username}: {user_input}")
-            
-            # Receive and display server response
-            response = client_socket.recv(1024).decode('utf-8')
-            if response:
-                print(response.strip())
-            else:
-                print("Server disconnected")
-                break
                 
     except KeyboardInterrupt:
         print("\nInterrupted by user")

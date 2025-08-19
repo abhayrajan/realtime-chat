@@ -109,8 +109,18 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
   - Clean server response display (no "Server echoed:" prefix)
   - Simple input prompt with no instructions
 
+### Chunk 3: Concurrent I/O Handling with Threading ✅
+- **File**: `client.py`
+- **Lines**: 15 lines added/modified
+- **Implementation**:
+  - Import threading module
+  - Add `receive_messages()` function for background message handling
+  - Create daemon thread for non-blocking message reception
+  - Remove synchronous `recv()` from main loop
+  - Add input prompt ">" for better UX
+  - Handle server responses with proper cursor positioning
+
 ### Planned Chunks:
-3. Concurrent I/O handling with threading or select
 4. Display incoming messages while typing
 
 ---

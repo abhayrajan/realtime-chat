@@ -120,20 +120,26 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
   - Add input prompt ">" for better UX
   - Handle server responses with proper cursor positioning
 
-### Planned Chunks:
-4. Display incoming messages while typing
+**Testing**: Client now supports concurrent I/O - can receive messages while typing
 
 ---
 
-## Step 4: Multi-User Chat Server (PLANNED)
+## Step 4: Multi-User Chat Server (IN PROGRESS)
 
 **Goal**: Transform echo server into multi-user chat with message broadcasting
 
+### Chunk 1: Threading Setup for Multiple Connections (IN PROGRESS)
+- **File**: `server.py`
+- **Lines**: 1 line added (import threading)
+- **Implementation**:
+  - Added threading module import
+  - Ready to implement client handling functions
+
 ### Planned Chunks:
-1. Threading/asyncio setup for multiple connections
-2. Client list management
-3. Message broadcasting logic
-4. Connection/disconnection handling
+2. Client handling function and connection loop
+3. Client list management
+4. Message broadcasting logic
+5. Connection/disconnection handling
 
 ---
 

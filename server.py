@@ -7,6 +7,23 @@ Basic TCP server that listens on port 7007
 import socket
 import threading
 
+def handle_client(client_socket, client_address):
+    """Handle messages from a single client in separate thread"""
+    print(f"Connection established with {client_address}")
+    
+    try:
+        while True:
+            message = client_socket.recv(1024).decode('utf-8')
+            if not message:
+                print(f"Client {client_address} disconnected")
+                break
+            print(f"Received from {client_address}: {message.strip()}")
+            client_socket.send(message.encode('utf-8'))
+    except ConnectionResetError:
+        print(f"Client {client_address} connection reset")
+    finally:
+        client_socket.close()
+
 def main():
     # Create TCP socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,37 +36,28 @@ def main():
     port = 7007
     server_socket.bind((host, port))
     
-    # Start listening for connections
+    # Start listening for connections (allow multiple)
     server_socket.listen(1)
-    print(f"Echo server listening on {host}:{port}")
-    print("Waiting for client connection...")
+    print(f"Multi-user server listening on {host}:{port}")
+    print("Waiting for client connections...")
     
-    # Accept a client connection
-    client_socket, client_address = server_socket.accept()
-    print(f"Connection established with {client_address}")
-    
-    # Handle client messages - echo loop
     try:
         while True:
-            # Receive message from client
-            message = client_socket.recv(1024).decode('utf-8')
+            # Accept client connections in loop
+            client_socket, client_address = server_socket.accept()
             
-            # Check if client disconnected
-            if not message:
-                print("Client disconnected")
-                break
-                
-            print(f"Received: {message.strip()}")
+            # Create thread for each client
+            client_thread = threading.Thread(
+                target=handle_client, 
+                args=(client_socket, client_address)
+            )
+            # client_thread.daemon = True
+            client_thread.start()
             
-            # Echo message back to client
-            client_socket.send(message.encode('utf-8'))
-            
-    except ConnectionResetError:
-        print("Client connection reset")
-    
-    # Close connections
-    client_socket.close()
-    server_socket.close()
+    except KeyboardInterrupt:
+        print("\nShutting down server...")
+    finally:
+        server_socket.close()
 
 if __name__ == "__main__":
     main()

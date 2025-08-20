@@ -147,10 +147,26 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
 
 **Testing**: Server now accepts multiple concurrent clients, each in separate threads
 
-### Planned Chunks:
-3. Client list management
-4. Message broadcasting logic
-5. Connection/disconnection handling
+### Chunk 3: Client List Management ✅
+- **File**: `server.py`
+- **Lines**: 6 lines added
+- **Implementation**:
+  - Add global `connected_clients` list and `clients_lock` threading lock
+  - Add new clients to list when they connect (thread-safe)
+  - Remove clients from list when they disconnect (thread-safe cleanup)
+  - Infrastructure ready for message broadcasting
+
+### Decision: Convert Server to Asyncio
+**Rationale**: Better scalability for handling many concurrent connections
+**Plan**: Convert server to asyncio while keeping threaded client (hybrid approach)
+
+### Asyncio Conversion Plan (Small Reviewable Chunks):
+- **Chunk A**: Basic asyncio imports and structure (5-8 lines)
+- **Chunk B**: Async server socket setup (8-10 lines)  
+- **Chunk C**: Async client handler function (10-12 lines)
+- **Chunk D**: Async client list management (6-8 lines)
+- **Chunk E**: Async message broadcasting (8-10 lines)
+- **Chunk F**: Server shutdown handling (4-6 lines)
 
 ---
 

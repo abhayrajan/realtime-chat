@@ -5,59 +5,68 @@ Basic TCP server that listens on port 7007
 """
 
 import socket
-import threading
+import asyncio
 
-def handle_client(client_socket, client_address):
-    """Handle messages from a single client in separate thread"""
-    print(f"Connection established with {client_address}")
-    
+# Global list to track connected clients
+connected_clients = []
+
+async def handle_client(reader, writer, client_address):
+    """Handle messages from a single client with asyncio streams"""
     try:
         while True:
-            message = client_socket.recv(1024).decode('utf-8')
-            if not message:
+            data = await reader.read(1024)
+            if not data:
                 print(f"Client {client_address} disconnected")
                 break
+            
+            message = data.decode('utf-8')
             print(f"Received from {client_address}: {message.strip()}")
-            client_socket.send(message.encode('utf-8'))
-    except ConnectionResetError:
-        print(f"Client {client_address} connection reset")
+            
+            # Echo message back to sender (will be changed to broadcast in Chunk E)
+            writer.write(message.encode('utf-8'))
+            await writer.drain()
+            
+    except asyncio.CancelledError:
+        print(f"Client {client_address} task cancelled")
+    except Exception as e:
+        print(f"Client {client_address} error: {e}")
     finally:
-        client_socket.close()
+        # Remove client from connected clients list
+        if writer in connected_clients:
+            connected_clients.remove(writer)
+        writer.close()
+        await writer.wait_closed()
 
-def main():
-    # Create TCP socket
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+async def handle_client_connection(reader, writer):
+    """Handle new client connection with asyncio streams"""
+    client_address = writer.get_extra_info('peername')
+    print(f"Connection established with {client_address}")
     
-    # Allow socket reuse to avoid "Address already in use" errors
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # Add client to connected clients list
+    connected_clients.append(writer)
     
-    # Bind to localhost on port 7007
+    # TODO: Will be implemented in Chunk C
+    await handle_client(reader, writer, client_address)
+
+async def main():
     host = 'localhost'
     port = 7007
-    server_socket.bind((host, port))
     
-    # Start listening for connections (allow multiple)
-    server_socket.listen(1)
+    # Create asyncio server
+    server = await asyncio.start_server(
+        handle_client_connection, host, port
+    )
+    
     print(f"Multi-user server listening on {host}:{port}")
     print("Waiting for client connections...")
     
     try:
-        while True:
-            # Accept client connections in loop
-            client_socket, client_address = server_socket.accept()
-            
-            # Create thread for each client
-            client_thread = threading.Thread(
-                target=handle_client, 
-                args=(client_socket, client_address)
-            )
-            client_thread.daemon = True
-            client_thread.start()
-            
+        await server.serve_forever()
     except KeyboardInterrupt:
         print("\nShutting down server...")
     finally:
-        server_socket.close()
+        server.close()
+        await server.wait_closed()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

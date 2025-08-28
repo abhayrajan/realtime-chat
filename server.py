@@ -10,6 +10,18 @@ import asyncio
 # Global list to track connected clients
 connected_clients = []
 
+async def remove_client(writer, client_address):
+    """Safely remove a client from the connected clients list"""
+    if writer in connected_clients:
+        connected_clients.remove(writer)
+        print(f"Removed client {client_address} from connected list")
+    
+    try:
+        writer.close()
+        await writer.wait_closed()
+    except Exception:
+        pass  # Connection may already be closed
+
 async def handle_client(reader, writer, client_address):
     """Handle messages from a single client with asyncio streams"""
     try:
@@ -31,11 +43,8 @@ async def handle_client(reader, writer, client_address):
     except Exception as e:
         print(f"Client {client_address} error: {e}")
     finally:
-        # Remove client from connected clients list
-        if writer in connected_clients:
-            connected_clients.remove(writer)
-        writer.close()
-        await writer.wait_closed()
+        # Remove client using helper function
+        await remove_client(writer, client_address)
 
 async def handle_client_connection(reader, writer):
     """Handle new client connection with asyncio streams"""

@@ -193,10 +193,19 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
   - Use async connection cleanup: `writer.close()` + `await writer.wait_closed()`
   - Update client list management to use `writer` objects
 
-**Status**: Server now fully asyncio-based with concurrent client handling
+#### Chunk D: Async Client List Management ✅
+- **File**: `server.py`
+- **Lines**: 6 lines added/modified
+- **Implementation**:
+  - Add `remove_client()` helper function for centralized cleanup logic
+  - Safe client list removal with existence check before removing
+  - Robust connection cleanup handling already-closed connections
+  - Better logging when clients are removed from connected list
+  - Update exception handling to use helper function for consistent cleanup
+
+**Status**: Server has robust client management ready for message broadcasting
 
 ### Remaining Chunks:
-- **Chunk D**: Async client list management (6-8 lines) - PENDING
 - **Chunk E**: Async message broadcasting (8-10 lines) - PENDING  
 - **Chunk F**: Server shutdown handling (4-6 lines) - PENDING
 

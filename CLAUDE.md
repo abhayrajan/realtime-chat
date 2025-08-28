@@ -15,6 +15,7 @@ This is a realtime chat application project based on a coding challenge to build
 ## Expected Architecture
 
 Given the project description, this will involve:
+
 - A Python chat server using TCP sockets
 - A Python chat client (command-line based)
 - Real-time communication using TCP/IP networking
@@ -31,12 +32,14 @@ Since this is a Python-based implementation, standard commands will be:
 ## Development Guardrails & Constraints
 
 ### Code Quality Standards
+
 - Write clean, readable code with meaningful variable and function names
 - Keep functions small and focused on single responsibilities
 - Add error handling for all network operations and user inputs
 - Use consistent code formatting throughout the project
 
 ### Architecture Constraints
+
 - Follow the milestone progression defined in requirements.md
 - Implement server and client as separate, independent components
 - Use TCP sockets for real-time communication (not WebSockets or HTTP)
@@ -44,6 +47,7 @@ Since this is a Python-based implementation, standard commands will be:
 - Design for concurrent users from the start (no single-user limitations)
 
 ### Implementation Rules
+
 - Always validate user input before processing
 - Handle network disconnections gracefully without crashing
 - Use in-memory storage only (no external databases)
@@ -52,12 +56,14 @@ Since this is a Python-based implementation, standard commands will be:
 - Test with multiple concurrent connections before considering milestones complete
 
 ### Security Considerations
+
 - Sanitize all user inputs to prevent injection attacks
 - Limit message sizes to prevent memory exhaustion
 - Implement basic rate limiting to prevent spam
 - No sensitive data should be logged or exposed
 
 ### Development Process
+
 - **CRITICAL**: Do not implement any code or create any files without explicit developer approval
 - **SMALL ITERATIONS**: Implement only small, manageable chunks of code at a time for review
 - Always present implementation plans and get confirmation before proceeding
@@ -68,8 +74,10 @@ Since this is a Python-based implementation, standard commands will be:
 - Test each small increment thoroughly before moving to the next piece
 - Maintain backward compatibility when adding features
 - Document any deviations from requirements.md with clear justification
+- Update the implementation log after the developer reviews and approves the implementation
 
 ### Code Review Guidelines
+
 - Implement maximum 20-30 lines of code at a time
 - Focus on single functionality per implementation cycle
 - Present clear explanation of what each code chunk does
@@ -78,6 +86,7 @@ Since this is a Python-based implementation, standard commands will be:
 - Never implement multiple functions or large code blocks simultaneously
 
 ### Technology Preferences
+
 - Use Python standard library: socket, threading, asyncio, select
 - Prefer built-in modules over external dependencies
 - Use TCP sockets (socket module) for network communication

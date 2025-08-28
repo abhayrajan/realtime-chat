@@ -22,6 +22,32 @@ async def remove_client(writer, client_address):
     except Exception:
         pass  # Connection may already be closed
 
+async def broadcast_message(message, sender_writer):
+    """Broadcast message to all connected clients except sender"""
+    if not connected_clients:
+        return
+    
+    # Send to all clients except the sender
+    broadcast_tasks = []
+    for client_writer in connected_clients.copy():  # Copy to avoid modification during iteration
+        if client_writer != sender_writer:
+            broadcast_tasks.append(send_to_client(client_writer, message))
+    
+    # Send to all clients concurrently
+    if broadcast_tasks:
+        await asyncio.gather(*broadcast_tasks, return_exceptions=True)
+
+async def send_to_client(writer, message):
+    """Send message to a specific client with error handling"""
+    try:
+        writer.write(message.encode('utf-8'))
+        await writer.drain()
+    except Exception:
+        # Client disconnected, remove from list
+        if writer in connected_clients:
+            connected_clients.remove(writer)
+            print(f"Removed disconnected client during broadcast")
+
 async def handle_client(reader, writer, client_address):
     """Handle messages from a single client with asyncio streams"""
     try:
@@ -34,9 +60,8 @@ async def handle_client(reader, writer, client_address):
             message = data.decode('utf-8')
             print(f"Received from {client_address}: {message.strip()}")
             
-            # Echo message back to sender (will be changed to broadcast in Chunk E)
-            writer.write(message.encode('utf-8'))
-            await writer.drain()
+            # Broadcast message to all other clients (no echo to sender)
+            await broadcast_message(message, writer)
             
     except asyncio.CancelledError:
         print(f"Client {client_address} task cancelled")
@@ -73,6 +98,11 @@ async def main():
         await server.serve_forever()
     except KeyboardInterrupt:
         print("\nShutting down server...")
+        # Close all client connections
+        if connected_clients:
+            print(f"Closing {len(connected_clients)} client connections...")
+            for client_writer in connected_clients.copy():
+                await remove_client(client_writer, "server shutdown")
     finally:
         server.close()
         await server.wait_closed()

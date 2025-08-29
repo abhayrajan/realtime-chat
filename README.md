@@ -52,4 +52,4 @@ The implementation demonstrates how AI-assisted development can be effective whe
 - Python 3.7+ (asyncio support)
 - No external dependencies (standard library only)
 
-See `requirements.md` for detailed functional requirements and `implementation-log.md` for complete development history.
+See [requirements.md](requirements.md) for detailed functional requirements and [implementation-log.md](implementation-log.md) for complete development history.

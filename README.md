@@ -52,4 +52,4 @@ The implementation demonstrates how AI-assisted development can be effective whe
 - Python 3.7+ (asyncio support)
 - No external dependencies (standard library only)
 
-See [requirements.md](requirements.md) for detailed functional requirements and [implementation-log.md](implementation-log.md) for complete development history.
+See [requirements.md](requirements.md) for detailed functional requirements, [implementation-log.md](implementation-log.md) for complete development history, and [CLAUDE.md](CLAUDE.md) for the development guardrails and constraints used with Claude Code.

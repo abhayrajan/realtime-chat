@@ -96,16 +96,18 @@ async def main():
     
     try:
         await server.serve_forever()
-    except KeyboardInterrupt:
+    finally:
         print("\nShutting down server...")
         # Close all client connections
         if connected_clients:
             print(f"Closing {len(connected_clients)} client connections...")
             for client_writer in connected_clients.copy():
                 await remove_client(client_writer, "server shutdown")
-    finally:
         server.close()
         await server.wait_closed()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Server shutdown complete.")

@@ -216,13 +216,16 @@ This document tracks the step-by-step implementation of the Realtime Chat Challe
 
 #### Chunk F: Server Shutdown Handling ✅
 - **File**: `server.py`
-- **Lines**: 4 lines added
+- **Lines**: 6 lines added/modified
 - **Implementation**:
+  - Move KeyboardInterrupt handling outside `asyncio.run()` to catch system signals properly
+  - Change `except KeyboardInterrupt` to `finally` to ensure cleanup always runs during exception unwinding
   - Add client count logging during shutdown
   - Graceful client disconnection using existing `remove_client()` helper
   - Safe iteration using `connected_clients.copy()` to avoid modification during iteration
-  - Clear shutdown reason logging ("server shutdown") for better debugging
-  - Maintain existing server socket cleanup with `server.close()` and `await server.wait_closed()`
+  - Add final "Server shutdown complete" confirmation message
+
+**Testing**: Server shutdown (Ctrl+C) now properly displays shutdown messages and gracefully closes all client connections
 
 **Status**: Asyncio conversion complete! Server is now fully async-based multi-user chat server
 
